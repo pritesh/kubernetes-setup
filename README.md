@@ -1,5 +1,20 @@
 # Romana setup details.
 
+## Installing Romana using installer provided by it
+
+```bash
+git clone https://github.com/romana/romana
+cd romana/romana-install
+./romana-setup -n test1 -c 3 -s kubeadm  --verbose install
+
+# now ssh into the machines if you want.
+ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 1>
+ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 2>
+ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 3>
+
+# Done, you have working romana installation..
+```
+
 ## Installing Kubernetes
 
 ```bash
@@ -153,14 +168,12 @@ sudo docker rmi $(sudo docker images -a -q)
 sudo docker cp `kubectl get pods -a -o wide --all-namespaces --selector=app=<name> -o   jsonpath='{.items[*].status.containerStatuses[1].containerID}'| cut -d"/" -f3 | cut -c1-30`:/usr/local/bin/<file> /usr/local/bin/<file>
 ```
 
-## Installing Romana using installer provided by it
+## Installing Romana using installer provided by it partially and rest manually
 
 ```bash
 git clone https://github.com/romana/romana
 cd romana/romana-install
-./romana-setup -n test1 -c 3 -s kubeadm  --verbose install
-# if you need just bare machines use nostack as below
-#./romana-setup -n test1 -c 3 -s nostack  --verbose install
+./romana-setup -n test1 -c 3 -s nostack  --verbose install
 ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 1>
 ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 2>
 ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 3>
