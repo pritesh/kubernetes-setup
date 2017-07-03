@@ -28,7 +28,7 @@ sudo apt-get install -y docker.io
 sudo apt-get install -y kubeadm
 sudo kubeadm init
 # or use a specific version using command below
-sudo kubeadm init --kubernetes-version v1.6.4
+sudo kubeadm init --kubernetes-version v1.7.0
 # now you would get something like this at the end:
 # sudo kubeadm join --token=<token> <ip-address:port>
 # example:
@@ -188,7 +188,7 @@ sudo apt-get install -y docker.io
 sudo apt-get install -y kubeadm
 sudo kubeadm init
 # or use a specific version using command below
-sudo kubeadm init --kubernetes-version v1.6.4
+sudo kubeadm init --kubernetes-version v1.7.0
 # now you would get something like this at the end:
 # sudo kubeadm join --token=<token> <ip-address:port>
 # example:
@@ -196,10 +196,9 @@ sudo kubeadm init --kubernetes-version v1.6.4
 # this is to be used on other nodes for joining kubernetes cluster.
 
 # Install config for kubectl
-mkdir .kube
-sudo cp /etc/kubernetes/admin.conf $HOME/
-sudo chown $(id -u):$(id -g) $HOME/admin.conf
-mv admin.conf .kube/config
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
 
 # Install Romana
