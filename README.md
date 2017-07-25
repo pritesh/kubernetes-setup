@@ -26,6 +26,8 @@ EOF
 sudo apt-get update
 sudo apt-get install -y docker.io
 sudo apt-get install -y kubeadm
+# Install older version of kubernetes packagesas follows if needed:
+sudo apt-get install -y kubelet=1.6.7-00 kubeadm=1.6.7-00 kubectl=1.6.7-00
 sudo kubeadm init
 # or use a specific version using command below
 sudo kubeadm init --kubernetes-version v1.7.0
