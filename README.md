@@ -1,6 +1,24 @@
 # Romana setup details.
 
-## Installing Romana using installer provided by it
+### Contents
+
+- [Installing Romana using installer provided by it](#contents)
+- [Installing Kubernetes](#contents)
+- [Installing Romana using provided containers](#contents)
+- [Scheduling Pods on Kubernetes master](#contents)
+  - [Pre Kubernetes 1.6](#contents)
+  - [Kubernetes 1.6+](#contents)
+- [Changing/Adding labels to nodes by patching it](#contents)
+- [Testing if the install is working](#contents)
+- [Bringup and Expose service to external world](#contents)
+  - [Removing cirros and nginx deployments](#contents)
+  - [Removing kubernetes install](#contents)
+  - [Deleting All docker Containers and Images](#contents)
+  - [Copy file form pod to host](#contents)
+- [Installing Romana using installer provided by it partially and rest manually](#contents)
+  - [Some useful commands](#contents)
+
+## [Installing Romana using installer provided by it](#contents)
 
 ```bash
 git clone https://github.com/romana/romana
@@ -15,7 +33,7 @@ ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 3>
 # Done, you have working romana installation..
 ```
 
-## Installing Kubernetes
+## [Installing Kubernetes](#contents)
 
 ```bash
 # On Controller
@@ -49,7 +67,7 @@ sudo apt-get install -y kubeadm
 sudo kubeadm join --token=<token> <ip-address:port>
 ```
 
-## Installing Romana using provided containers
+## [Installing Romana using provided containers](#contents)
 
 ```bash
 wget https://raw.githubusercontent.com/romana/romana/master/containerize/specs/romana-kubeadm.yml
@@ -57,28 +75,31 @@ wget https://raw.githubusercontent.com/romana/romana/master/containerize/specs/r
 kubectl apply -f romana-kubeadm.yml
 ```
 
-## Scheduling Pods on Kubernetes master
+## [Scheduling Pods on Kubernetes master](#contents)
 
 Removing taint from kubernetes master allows scheduling pods on master.
 This is useful when single node is present.
 
-#### Pre Kubernetes 1.6
+### [Pre Kubernetes 1.6](#contents)
+
 ```bash
 kubectl taint nodes --all dedicated:NoSchedule-
 ```
 
-#### Kubernetes 1.6+
+### [Kubernetes 1.6+](#contents)
+
 ```bash
 kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 ```
 
-## Changing/Adding labels to nodes by patching it.
+## [Changing/Adding labels to nodes by patching it](#contents)
 
 ```bash
 kubectl patch node <node-name> -p '{"metadata":{"labels":{"node-role.kubernetes.io/master": ""}}}'
 ````
 
-## Testing if the install is working
+## [Testing if the install is working](#contents)
+
 ```bash
 # First try checking the pods and see if all of them
 # come up properly and are in running state. You may
@@ -114,7 +135,8 @@ nslookup cirros-4036794762-9s46o
 
 ```
 
-## Bringup and Expose service to external world
+## [Bringup and Expose service to external world](#contents)
+
 ```bash
 # bringup nginx with 2 replicas on port 80.
 kubectl run nginx --image=nginx --replicas=2 --port=80
@@ -144,12 +166,14 @@ curl 192.168.99.10:80
 # You are all set and ready to roll.
 ```
 
-### Removing cirros and nginx deployments
+### [Removing cirros and nginx deployments](#contents)
+
 ```bash
 kubectl delete deployments nginx cirros
 ```
 
-### Removing kubernetes install.
+### [Removing kubernetes install](#contents)
+
 ```bash
 # On Controller and all nodes, run following command
 # to reset your cluster to what it was before installing
@@ -157,20 +181,21 @@ kubectl delete deployments nginx cirros
 # BEWARE, YOU WILL LOSE ALL YOUR PODS/SERVICES/DATA/etc.
 sudo kubeadm reset
 ```
-### Deleting All docker Containers and Images
+
+### [Deleting All docker Containers and Images](#contents)
 
 ```bash
 sudo docker rm $(sudo docker ps -a -q)
 sudo docker rmi $(sudo docker images -a -q)
 ```
 
-### Copy file form pod to host
+### [Copy file form pod to host](#contents)
 
 ```bash
 sudo docker cp `kubectl get pods -a -o wide --all-namespaces --selector=app=<name> -o   jsonpath='{.items[*].status.containerStatuses[1].containerID}'| cut -d"/" -f3 | cut -c1-30`:/usr/local/bin/<file> /usr/local/bin/<file>
 ```
 
-## Installing Romana using installer provided by it partially and rest manually
+## [Installing Romana using installer provided by it partially and rest manually](#contents)
 
 ```bash
 git clone https://github.com/romana/romana
@@ -222,7 +247,7 @@ sudo apt-get install -y kubeadm
 sudo kubeadm join --token=<token> <ip-address:port>
 ```
 
-### Some useful commands:
+### [Some useful commands](#contents)
 
 ```bash
 kubectl get nodes -a -o wide --show-labels
@@ -230,3 +255,4 @@ watch -d kubectl get nodes -a -o wide
 kubectl get pods,svc,rc -a -o wide --all-namespaces
 watch -d kubectl get pods,svc,rc -a -o wide --all-namespaces
 ```
+
