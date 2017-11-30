@@ -2,21 +2,21 @@
 
 ### Contents
 
-- [Installing Romana using installer provided by it](#contents)
-- [Installing Kubernetes](#contents)
-- [Installing Romana using provided containers](#contents)
-- [Scheduling Pods on Kubernetes master](#contents)
-  - [Pre Kubernetes 1.6](#contents)
-  - [Kubernetes 1.6+](#contents)
-- [Changing/Adding labels to nodes by patching it](#contents)
-- [Testing if the install is working](#contents)
-- [Bringup and Expose service to external world](#contents)
-  - [Removing cirros and nginx deployments](#contents)
-  - [Removing kubernetes install](#contents)
-  - [Deleting All docker Containers and Images](#contents)
-  - [Copy file form pod to host](#contents)
-- [Installing Romana using installer provided by it partially and rest manually](#contents)
-  - [Some useful commands](#contents)
+- [Installing Romana using installer provided by it](#installing-romana-using-installer-provided-by-it)
+- [Installing Kubernetes](#installing-kubernetes)
+- [Installing Romana using provided containers](#installing-romana-using-provided-containers)
+- [Scheduling Pods on Kubernetes master](#scheduling-pods-on-kubernetes-master)
+  - [Pre Kubernetes 1.6](#pre-kubernetes-16)
+  - [Post Kubernetes 1.6](#post-kubernetes-16)
+- [Changing/Adding labels to nodes by patching it](#changingadding-labels-to-nodes-by-patching-it)
+- [Testing if the install is working](#testing-if-the-install-is-working)
+- [Bringup and Expose service to external world](#bringup-and-expose-service-to-external-world)
+  - [Removing cirros and nginx deployments](#removing-cirros-and-nginx-deployments)
+  - [Removing kubernetes install](#removing-kubernetes-install)
+  - [Deleting All docker Containers and Images](#deleting-all-docker-containers-and-images)
+  - [Copy file form pod to host](#copy-file-form-pod-to-host)
+- [Installing Romana using installer provided by it partially and rest manually](#installing-romana-using-installer-provided-by-it-partially-and-rest-manually)
+  - [Some useful commands](#some-useful-commands)
 
 ## [Installing Romana using installer provided by it](#contents)
 
@@ -86,7 +86,7 @@ This is useful when single node is present.
 kubectl taint nodes --all dedicated:NoSchedule-
 ```
 
-### [Kubernetes 1.6+](#contents)
+### [Post Kubernetes 1.6](#contents)
 
 ```bash
 kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
