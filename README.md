@@ -1,8 +1,8 @@
-# Romana setup details.
+# Kubernetes setup details.
 
 ### Contents
 
-- [Installing Romana using installer provided by it](#installing-romana-using-installer-provided-by-it)
+- [Installing Kubernetes using installer provided by romana](#installing-kubernetes-using-installer-provided-by-romana)
 - [Installing Kubernetes](#installing-kubernetes)
 - [Installing Romana using provided containers](#installing-romana-using-provided-containers)
 - [Scheduling Pods on Kubernetes master](#scheduling-pods-on-kubernetes-master)
@@ -18,7 +18,7 @@
 - [Installing Romana using installer provided by it partially and rest manually](#installing-romana-using-installer-provided-by-it-partially-and-rest-manually)
   - [Some useful commands](#some-useful-commands)
 
-## [Installing Romana using installer provided by it](#contents)
+## [Installing Kubernetes using installer provided by romana](#contents)
 
 ```bash
 git clone https://github.com/romana/romana
