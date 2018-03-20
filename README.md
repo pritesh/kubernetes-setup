@@ -9,7 +9,7 @@
   - [Pre Kubernetes 1.6](#pre-kubernetes-16)
   - [Post Kubernetes 1.6](#post-kubernetes-16)
   - [Retaint master node](#retaint-master-node)
-- [Changing/Adding labels to nodes by patching it](#changingadding-labels-to-nodes-by-patching-it)
+- [Changing/Adding labels to nodes/pods](#changingadding-labels-to-nodespods)
 - [Testing if the install is working](#testing-if-the-install-is-working)
 - [Bringup and Expose service to external world](#bringup-and-expose-service-to-external-world)
   - [Removing cirros and nginx deployments](#removing-cirros-and-nginx-deployments)
@@ -99,11 +99,28 @@ kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 kubectl taint node <node-name> node-role.kubernetes.io/master=:NoSchedule
 ```
 
-## [Changing/Adding labels to nodes by patching it](#contents)
+## [Changing/Adding labels to nodes/pods](#contents)
 
 ```bash
+# Add label by patching the node yaml.
 kubectl patch node <node-name> -p '{"metadata":{"labels":{"node-role.kubernetes.io/master": ""}}}'
-````
+
+# Add label on cli for the node or pod.
+kubectl  label nodes/ubuntu com.company.com/node=cluster1
+kubectl  label po/nginx-dzpsr com.company.com/app=web
+
+# Example Output:
+kubectl get nodes,pods --show-labels
+NAME        STATUS    ROLES     AGE       VERSION   LABELS
+no/centos   Ready     <none>    3d        v1.9.4    beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/hostname=centos
+no/ubuntu   Ready     master    3d        v1.9.4    beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,com.company.com/node=cluster1,kubernetes.io/hostname=ubuntu,node-role.kubernetes.io/master=
+
+NAME             READY     STATUS              RESTARTS   AGE         LABELS
+po/nginx-5pntv   0/1       ContainerCreating   0          <invalid>   app=nginx
+po/nginx-dwf78   0/1       ContainerCreating   0          <invalid>   app=nginx
+po/nginx-dzpsr   1/1       Running             0          <invalid>   app=nginx,com.company.com/app=web
+po/nginx-vj9s9   1/1       Running             0          <invalid>   app=nginx
+```
 
 ## [Testing if the install is working](#contents)
 
