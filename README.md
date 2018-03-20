@@ -261,5 +261,11 @@ kubectl get nodes -a -o wide --show-labels
 watch -d kubectl get nodes -a -o wide
 kubectl get pods,svc,rc -a -o wide --all-namespaces
 watch -d kubectl get pods,svc,rc -a -o wide --all-namespaces
+
+# send bridge packets to iptables for further processing, needed by kubeadm (kubernetes)
+echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+echo "net.bridge.bridge-nf-call-ip6tables=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl net.bridge.bridge-nf-call-iptables=1
+sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
 ```
 
