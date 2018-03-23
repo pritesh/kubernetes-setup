@@ -69,6 +69,46 @@ sudo apt-get install -y kubeadm
 sudo kubeadm join --token=<token> <ip-address:port>
 ```
 
+### Centos
+```bash
+# On Controller
+
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+sudo yum update
+sudo yum install -y docker
+sudo systemctl enable docker && sudo systemctl start docker
+setenforce 0
+sudo yum install -y kubelet kubeadm kubectl
+# or use following method to install a specific version
+# search for specific version of kubeadm
+sudo yum list kubeadm --showduplicates
+sudo yum install kubeadm-1.7.15-0 kubelet-1.7.15-0 kubectl-1.7.15-0 kubernetes-cni-0.5.1-1
+sudo systemctl enable kubelet && sudo systemctl start kubelet
+
+# Install older version of kubernetes packagesas follows if needed:
+
+sudo kubeadm init
+# or use a specific version using command below
+sudo kubeadm init --kubernetes-version v1.7.15
+# or with flannel which needs pod networking specified
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+# now you would get something like this at the end:
+# sudo kubeadm join --token=<token> <ip-address:port>
+# example:
+# sudo kubeadm join --token 0f32b7.c003ad92878711b5 192.168.99.10:6443
+kubectl get nodes -a -o wide --show-labels
+kubectl apply -f kube-flannel.yml
+```
+
 ## [Installing Romana using provided containers](#contents)
 
 ```bash
