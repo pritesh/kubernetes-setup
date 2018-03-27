@@ -38,28 +38,44 @@ ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 3>
 
 ### Ubuntu
 ```bash
-# On Controller
+# On Controller/Master
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb http://apt.kubernetes.io/ kubernetes-xenial main
 EOF
+
+# Turn swap off, else kubeadm fails, but do not skip pre-flight checks
+sudo swapoff -va
+
 sudo apt-get update
 sudo apt-get install -y docker.io
-sudo apt-get install -y kubeadm
-# Install older version of kubernetes packagesas follows if needed:
+
+# Find and Install a specific version of kubernetes packages as follows if needed:
 sudo apt-cache madison kubeadm
 sudo apt-get install -y kubelet=1.7.15-00 kubeadm=1.7.15-00 kubectl=1.7.15-00 kubernetes-cni-0.5.1-00
+# or else just install the latest one using
+sudo apt-get install -y kubeadm
+
+# bootstrap kubernetes
 sudo kubeadm init
-# or use a specific version using command below
-sudo kubeadm init --kubernetes-version v1.7.15
 # or use a specific version and with flannel which needs pod networking specified
 sudo kubeadm init --kubernetes-version v1.7.15 --pod-network-cidr=10.244.0.0/16
-wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+# or use a specific version using command below
+sudo kubeadm init --kubernetes-version v1.7.15
+
 # now you would get something like this at the end:
 # sudo kubeadm join --token=<token> <ip-address:port>
 # example:
 # sudo kubeadm join --token 0f32b7.c003ad92878711b5 192.168.99.10:6443
+# after you get above lines on command prompt, use following
+# commands for kubectl to work.
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
+
+# Download and install flannel CNI.
+wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 kubectl apply -f kube-flannel.yml
 
 # On Nodes
@@ -70,7 +86,7 @@ sudo kubeadm join --token=<token> <ip-address:port>
 
 ### Centos
 ```bash
-# On Controller
+# On Controller/Master
 
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -81,30 +97,47 @@ gpgcheck=1
 repo_gpgcheck=1
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
+
+# Turn swap off, else kubeadm fails, but do not skip pre-flight checks
+sudo swapoff -va
+
 sudo yum update
 sudo yum install -y docker
 sudo systemctl enable docker && sudo systemctl start docker
 setenforce 0
 sudo yum install -y kubelet kubeadm kubectl
-# or use following method to install a specific version
-# search for specific version of kubeadm
-sudo yum list kubeadm --showduplicates
-# Install older version of kubernetes packages as follows if needed:
+
+# Find and Install a specific version of kubernetes packagesas follows if needed:
+sudo yum list kubeadm 
 sudo yum install kubeadm-1.7.15-0 kubelet-1.7.15-0 kubectl-1.7.15-0 kubernetes-cni-0.5.1-1
+# or else just install the latest one using
+sudo yum install -y kubeadm
+
+# Enable and start kubelet
 sudo systemctl enable kubelet && sudo systemctl start kubelet
+
+# bootstrap kubernetes
 sudo kubeadm init
+# or use a specific version and with flannel which needs pod networking specified
+sudo kubeadm init --kubernetes-version v1.7.15 --pod-network-cidr=10.244.0.0/16
 # or use a specific version using command below
 sudo kubeadm init --kubernetes-version v1.7.15
 # or with flannel which needs pod networking specified
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
-# or use a specific version and with flannel which needs pod networking specified
-sudo kubeadm init --kubernetes-version v1.7.15 --pod-network-cidr=10.244.0.0/16
-wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+
 # now you would get something like this at the end:
 # sudo kubeadm join --token=<token> <ip-address:port>
 # example:
 # sudo kubeadm join --token 0f32b7.c003ad92878711b5 192.168.99.10:6443
+# after you get above lines on command prompt, use following
+# commands for kubectl to work.
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
+
+# Download and install flannel CNI.
+wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 kubectl apply -f kube-flannel.yml
 
 # On Nodes
