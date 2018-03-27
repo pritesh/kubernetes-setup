@@ -100,6 +100,8 @@ sudo kubeadm init
 sudo kubeadm init --kubernetes-version v1.7.15
 # or with flannel which needs pod networking specified
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+# or use a specific version and with flannel which needs pod networking specified
+sudo kubeadm init --kubernetes-version v1.7.15 --pod-network-cidr=10.244.0.0/16
 wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 # now you would get something like this at the end:
 # sudo kubeadm join --token=<token> <ip-address:port>
