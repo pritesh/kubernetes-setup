@@ -47,24 +47,23 @@ sudo apt-get update
 sudo apt-get install -y docker.io
 sudo apt-get install -y kubeadm
 # Install older version of kubernetes packagesas follows if needed:
-sudo apt-get install -y kubelet=1.6.7-00 kubeadm=1.6.7-00 kubectl=1.6.7-00
+sudo apt-cache madison kubeadm
+sudo apt-get install -y kubelet=1.7.15-00 kubeadm=1.7.15-00 kubectl=1.7.15-00
 sudo kubeadm init
 # or use a specific version using command below
-sudo kubeadm init --kubernetes-version v1.7.0
+sudo kubeadm init --kubernetes-version v1.7.15
+# or use a specific version and with flannel which needs pod networking specified
+sudo kubeadm init --kubernetes-version v1.7.15 --pod-network-cidr=10.244.0.0/16
+wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 # now you would get something like this at the end:
 # sudo kubeadm join --token=<token> <ip-address:port>
 # example:
 # sudo kubeadm join --token 0f32b7.c003ad92878711b5 192.168.99.10:6443
 kubectl get nodes -a -o wide --show-labels
+kubectl apply -f kube-flannel.yml
 
 # On Nodes
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-deb http://apt.kubernetes.io/ kubernetes-xenial main
-EOF
-sudo apt-get update
-sudo apt-get install -y docker.io
-sudo apt-get install -y kubeadm
+# All above steps except the kubeadm init step, use kubeadm join below instead.
 # Use the kubeadm join command and token from controller here.
 sudo kubeadm join --token=<token> <ip-address:port>
 ```
@@ -90,11 +89,9 @@ sudo yum install -y kubelet kubeadm kubectl
 # or use following method to install a specific version
 # search for specific version of kubeadm
 sudo yum list kubeadm --showduplicates
+# Install older version of kubernetes packages as follows if needed:
 sudo yum install kubeadm-1.7.15-0 kubelet-1.7.15-0 kubectl-1.7.15-0 kubernetes-cni-0.5.1-1
 sudo systemctl enable kubelet && sudo systemctl start kubelet
-
-# Install older version of kubernetes packagesas follows if needed:
-
 sudo kubeadm init
 # or use a specific version using command below
 sudo kubeadm init --kubernetes-version v1.7.15
@@ -109,6 +106,11 @@ wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-
 # sudo kubeadm join --token 0f32b7.c003ad92878711b5 192.168.99.10:6443
 kubectl get nodes -a -o wide --show-labels
 kubectl apply -f kube-flannel.yml
+
+# On Nodes
+# All above steps except the kubeadm init step, use kubeadm join below instead.
+# Use the kubeadm join command and token from controller here.
+sudo kubeadm join --token=<token> <ip-address:port>
 ```
 
 ## [Installing Romana using provided containers](#contents)
