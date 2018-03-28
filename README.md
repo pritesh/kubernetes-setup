@@ -11,6 +11,7 @@
   - [Retaint master node](#retaint-master-node)
 - [Changing/Adding labels to nodes/pods](#changingadding-labels-to-nodespods)
 - [Testing if the install is working](#testing-if-the-install-is-working)
+- [Change kube proxy to use userspace mode](#change-kube-proxy-to-use-userspace-mode)
 - [Bringup and Expose service to external world](#bringup-and-expose-service-to-external-world)
   - [Removing cirros and nginx deployments](#removing-cirros-and-nginx-deployments)
   - [Removing kubernetes install](#removing-kubernetes-install)
@@ -235,6 +236,20 @@ nslookup cirros-4036794762-9s46o
 #Name:      cirros-4036794762-9s46o
 #Address 1: 100.112.11.131 cirros-4036794762-9s46o
 
+```
+
+## [Change kube proxy to use userspace mode](#contents)
+
+```bash
+# Install jq
+sudo apt-get install jq # ubuntu
+sudo yum install jq # centos
+
+# Patch kube-proxy yaml to include userspace mode
+kubectl -n kube-system get ds -l "k8s-app=kube-proxy" -o json | jq ".items[0].spec.template.spec.containers[0].command |= .+ [\"--proxy-mode=userspace\"]" | kubectl apply -f -
+
+# Restart kube-proxy pods, so that the new config can be applied.
+kubectl -n kube-system delete pods -l "k8s-app=kube-proxy"
 ```
 
 ## [Bringup and Expose service to external world](#contents)
