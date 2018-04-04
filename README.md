@@ -371,11 +371,15 @@ sudo kubeadm join --token=<token> <ip-address:port>
 ### [Some useful commands](#contents)
 
 ```bash
+# Get Nodes, Pods, Service, etc details.
 watch -d kubectl get nodes -a -o wide
 watch -d kubectl get pods,svc,rc -a -o wide --all-namespaces
 watch -d kubectl get pods,rc,svc,ds,jobs,deploy -a -o wide --all-namespaces
 
-# send bridge packets to iptables for further processing, needed by kubeadm (kubernetes)
+# Delete all services, replication controllers, etc from default namespaces
+kubectl get svc,rc,deploy,jobs -o name | xargs kubectl delete
+
+# Send bridge packets to iptables for further processing, needed by kubeadm (kubernetes)
 echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
 echo "net.bridge.bridge-nf-call-ip6tables=1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl net.bridge.bridge-nf-call-iptables=1
