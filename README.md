@@ -384,5 +384,10 @@ echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
 echo "net.bridge.bridge-nf-call-ip6tables=1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl net.bridge.bridge-nf-call-iptables=1
 sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
+
+# Using Docker command without sudo
+sudo groupadd docker
+sudo usermod -aG docker $USER
+# logout and login, docker should work without sudo
 ```
 
