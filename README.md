@@ -81,6 +81,14 @@ wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-
 sed -i 's/vxlan/host-gw/' kube-flannel.yml 
 kubectl apply -f kube-flannel.yml
 
+# Download and install kube-router CNI if you don't want to use flannel above (Only on Master node once)
+wget https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
+# Turn off network policies
+sed -i 's/--run-firewall=true/--run-firewall=false/' kubeadm-kuberouter.yaml
+# OR Turn off network policies and allow communication from a pod that is behind a Service to its own ClusterIP:Port
+sed -i 's/--run-firewall=true/--run-firewall=false\n        - --hairpin-mode=true/' kubeadm-kuberouter.yaml
+kubectl apply -f kubeadm-kuberouter.yaml
+
 # On Nodes
 # All above steps except the kubeadm init step, use kubeadm join below instead.
 # Use the kubeadm join command and token from controller here.
