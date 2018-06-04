@@ -76,7 +76,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
 
 # Download and install flannel CNI (Only on Master node once)
-wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 # Change the networking mode from vxlan to host-gw
 sed -i 's/vxlan/host-gw/' kube-flannel.yml 
 kubectl apply -f kube-flannel.yml
@@ -148,7 +148,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
 
 # Download and install flannel CNI (Only on Master node once)
-wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
 # Change the networking mode from vxlan to host-gw
 sed -i 's/vxlan/host-gw/' kube-flannel.yml 
 kubectl apply -f kube-flannel.yml
