@@ -4,6 +4,8 @@
 
 - [Installing Kubernetes using installer provided by romana](#installing-kubernetes-using-installer-provided-by-romana)
 - [Installing Kubernetes](#installing-kubernetes)
+  - [Ubuntu](#ubuntu)
+  - [Centos](#centos)
 - [Installing Romana using provided containers](#installing-romana-using-provided-containers)
 - [Scheduling Pods on Kubernetes master](#scheduling-pods-on-kubernetes-master)
   - [Pre Kubernetes 1.6](#pre-kubernetes-16)
@@ -37,7 +39,7 @@ ssh -i ~/romana/romana-install/romana_id_rsa ubuntu@<IP Address of the node 3>
 
 ## [Installing Kubernetes](#contents)
 
-### Ubuntu
+### [Ubuntu](#contents)
 ```bash
 # On Controller/Master
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -95,7 +97,7 @@ kubectl apply -f kubeadm-kuberouter.yaml
 sudo kubeadm join --token=<token> <ip-address:port>
 ```
 
-### Centos
+### [Centos](#contents)
 ```bash
 # On Controller/Master
 
