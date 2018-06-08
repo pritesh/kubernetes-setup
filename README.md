@@ -306,6 +306,13 @@ kubectl delete deployments nginx cirros
 ### [Removing kubernetes install](#contents)
 
 ```bash
+# Remove a node from the cluster
+kubectl drain <node-name>
+kubectl delete node <node-name>
+
+# Allowed drain node to return to cluster
+kubectl uncordon <node-name>
+
 # On Controller and all nodes, run following command
 # to reset your cluster to what it was before installing
 # kubernetes
