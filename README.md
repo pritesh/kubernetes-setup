@@ -19,6 +19,7 @@
   - [Removing kubernetes install](#removing-kubernetes-install)
   - [Deleting All docker Containers and Images](#deleting-all-docker-containers-and-images)
   - [Copy file form pod to host](#copy-file-form-pod-to-host)
+- [Bringup and Expose Kubernetes Dashboard](#bringup-and-expose-kubernetes-dashboard)
 - [Installing Romana using installer provided by it partially and rest manually](#installing-romana-using-installer-provided-by-it-partially-and-rest-manually)
   - [Some useful commands](#some-useful-commands)
 
@@ -331,6 +332,33 @@ sudo docker rmi $(sudo docker images -a -q)
 
 ```bash
 sudo docker cp `kubectl get pods -a -o wide --all-namespaces --selector=app=<name> -o   jsonpath='{.items[*].status.containerStatuses[1].containerID}'| cut -d"/" -f3 | cut -c1-30`:/usr/local/bin/<file> /usr/local/bin/<file>
+```
+
+## [Bringup and Expose Kubernetes Dashboard](#contents)
+
+```bash
+wget https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+kubectl create -f kubernetes-dashboard.yaml
+kubectl proxy --port 8001 &
+cat << EOF > kubernetes-dashboard-rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: kubernetes-dashboard
+  labels:
+    k8s-app: kubernetes-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
+EOF
+kubectl apply -f kubernetes-dashboard-rbac.yaml
+# Now open the following link for dashboard:
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
 
 ## [Installing Romana using installer provided by it partially and rest manually](#contents)
