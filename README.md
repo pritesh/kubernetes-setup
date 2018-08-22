@@ -324,8 +324,12 @@ sudo kubeadm reset
 ### [Deleting All docker Containers and Images](#contents)
 
 ```bash
-sudo docker rm $(sudo docker ps -a -q)
-sudo docker rmi $(sudo docker images -a -q)
+# Removing all docker containers
+docker rm $(docker ps -a -q)
+# Removing all cleanly exited docker containers
+docker rm $(docker ps -a -q -f exited=0)
+# Removing all docker images
+docker rmi $(docker images -a -q)
 ```
 
 ### [Copy file form pod to host](#contents)
