@@ -330,6 +330,20 @@ docker rm $(docker ps -a -q)
 docker rm $(docker ps -a -q -f exited=0)
 # Removing all docker images
 docker rmi $(docker images -a -q)
+# List IP address for docker containers
+docker ps -q | xargs docker inspect --format '{{ .Id }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}'
+# Bash function for docker ps like IP address details.
+function dockerps() {
+    docker ps | while read line; do
+        if `echo $line | grep -q 'CONTAINER ID'`; then
+            echo -e "IP ADDRESS\t$line"
+        else
+            CID=$(echo $line | awk '{print $1}');
+            IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" $CID);
+            printf "${IP}\t${line}\n"
+        fi
+    done;
+}
 ```
 
 ### [Copy file form pod to host](#contents)
