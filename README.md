@@ -442,6 +442,9 @@ watch -d kubectl get pods,rc,svc,ds,jobs,deploy -a -o wide --all-namespaces
 # Delete all services, replication controllers, etc from default namespaces
 kubectl get svc,rc,deploy,jobs -o name | xargs kubectl delete
 
+# Delete non running pods.
+kubectl get pods --all-namespaces -o json --field-selector="status.phase!=Running" | jq  '.items[] | "kubectl delete pods \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+
 # Send bridge packets to iptables for further processing, needed by kubeadm (kubernetes)
 echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
 echo "net.bridge.bridge-nf-call-ip6tables=1" | sudo tee -a /etc/sysctl.conf
