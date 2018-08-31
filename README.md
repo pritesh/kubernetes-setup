@@ -445,6 +445,9 @@ kubectl get svc,rc,deploy,jobs -o name | xargs kubectl delete
 # Delete non running pods.
 kubectl get pods --all-namespaces -o json --field-selector="status.phase!=Running" | jq  '.items[] | "kubectl delete pods \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
 
+# Remove evicted pods.
+kubectl get pods --all-namespaces -ojson | jq -r '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) | .metadata.name + " " + .metadata.namespace' | xargs -n2 -l bash -c 'kubectl delete pods $0 --namespace=$1'
+
 # Send bridge packets to iptables for further processing, needed by kubeadm (kubernetes)
 echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
 echo "net.bridge.bridge-nf-call-ip6tables=1" | sudo tee -a /etc/sysctl.conf
