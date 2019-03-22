@@ -21,7 +21,8 @@
   - [Copy file form pod to host](#copy-file-form-pod-to-host)
 - [Bringup and Expose Kubernetes Dashboard](#bringup-and-expose-kubernetes-dashboard)
 - [Installing Romana using installer provided by it partially and rest manually](#installing-romana-using-installer-provided-by-it-partially-and-rest-manually)
-  - [Some useful commands](#some-useful-commands)
+- [Some useful commands](#some-useful-commands)
+- [Recreate kubeadm join command](#recreate-kubeadm-join-command)
 
 ## [Installing Kubernetes using installer provided by romana](#contents)
 
@@ -433,7 +434,7 @@ sudo apt-get install -y kubeadm
 sudo kubeadm join --token=<token> <ip-address:port>
 ```
 
-### [Some useful commands](#contents)
+## [Some useful commands](#contents)
 
 ```bash
 # Get Nodes, Pods, Service, etc details.
@@ -460,5 +461,11 @@ sudo sysctl net.bridge.bridge-nf-call-ip6tables=1
 sudo groupadd docker
 sudo usermod -aG docker $USER
 # logout and login, docker should work without sudo
+
 ```
 
+## [Recreate kubeadm join command](#contents)
+
+```bash
+echo sudo kubeadm join $(ip addr show dev $(awk '$2 == 00000000 { print $1 }' /proc/net/route) | awk '$1 ~ /^inet/ { sub("/.*", "", $2); print $2 }' | head -n 1):6443 --token $(kubeadm token list | head -n 2 | tail -n 1 | cut -d ' ' -f 1) --discovery-token-ca-cert-hash sha256:$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+```
