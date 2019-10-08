@@ -62,7 +62,7 @@ sudo apt-get install -y kubelet=1.7.15-00 kubeadm=1.7.15-00 kubectl=1.7.15-00 ku
 sudo apt-get install -y kubeadm
 
 # bootstrap kubernetes
-sudo kubeadm init
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 # or use a specific version and with flannel which needs pod networking specified
 sudo kubeadm init --kubernetes-version v1.7.15 --pod-network-cidr=10.244.0.0/16
 # or use a specific version using command below
@@ -80,7 +80,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
 
 # Download and install flannel CNI (Only on Master node once)
-wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+wget https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
 # Change the networking mode from vxlan to host-gw
 sed -i 's/vxlan/host-gw/' kube-flannel.yml 
 kubectl apply -f kube-flannel.yml
@@ -152,7 +152,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl get nodes -a -o wide --show-labels
 
 # Download and install flannel CNI (Only on Master node once)
-wget https://raw.githubusercontent.com/coreos/flannel/v0.10.0/Documentation/kube-flannel.yml
+wget https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
 # Change the networking mode from vxlan to host-gw
 sed -i 's/vxlan/host-gw/' kube-flannel.yml 
 kubectl apply -f kube-flannel.yml
