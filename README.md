@@ -10,6 +10,7 @@
 - [Scheduling Pods on Kubernetes master](#scheduling-pods-on-kubernetes-master)
   - [Pre Kubernetes 1.6](#pre-kubernetes-16)
   - [Post Kubernetes 1.6](#post-kubernetes-16)
+  - [Post Kubernetes 1.24](#post-kubernetes-124)
   - [Retaint master node](#retaint-master-node)
 - [Changing/Adding labels to nodes/pods](#changingadding-labels-to-nodespods)
 - [Testing if the install is working](#testing-if-the-install-is-working)
@@ -187,6 +188,13 @@ kubectl taint nodes --all dedicated:NoSchedule-
 ```bash
 kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
 ```
+
+### [Post Kubernetes 1.24](#contents)
+
+```bash
+kubectl taint nodes --all node-role.kubernetes.io/control-plane- node-role.kubernetes.io/master-
+```
+
 
 ### [Retaint Master Node](#contents)
 
