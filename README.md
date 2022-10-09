@@ -341,6 +341,8 @@ docker rm $(docker ps -a -q -f exited=0)
 docker rmi $(docker images -a -q)
 # Reclaim space by clearing up docker volume
 docker volume prune -f
+# Remove all Containers, Volumes, Networks, Images, build cache, etc.
+docker system prune -a --volumes
 # List IP address for docker containers
 docker ps -q | xargs docker inspect --format '{{ .Id }} - {{ .Name }} - {{ .NetworkSettings.IPAddress }}'
 # Bash function for docker ps like IP address details.
