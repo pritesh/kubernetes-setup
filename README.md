@@ -1,5 +1,7 @@
 # Kubernetes setup details.
 
+# Outdated
+
 ### Contents
 
 - [Installing Kubernetes using installer provided by romana](#installing-kubernetes-using-installer-provided-by-romana)
